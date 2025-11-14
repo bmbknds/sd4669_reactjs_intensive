@@ -6,6 +6,7 @@ import { UserRole } from '../types';
 
 // Lazy load pages for code splitting
 const LoginPage = lazy(() => import('../features/auth/login-page'));
+const LandingPage = lazy(() => import('../features/landing/landing-page'));
 const ProfilePage = lazy(() => import('../features/profile/profile-page'));
 const KYCPage = lazy(() => import('../features/kyc/kyc-page'));
 const ClientListPage = lazy(() => import('../features/client-list/client-list-page'));
@@ -14,7 +15,7 @@ const ReviewPage = lazy(() => import('../features/review/review-page'));
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: <Navigate to="/login" replace />,
+    element: <Navigate to="/landing" replace />,
   },
   {
     path: '/login',
@@ -22,6 +23,14 @@ export const router = createBrowserRouter([
       <PublicRoute>
         <LoginPage />
       </PublicRoute>
+    ),
+  },
+  {
+    path: '/landing',
+    element: (
+      <ProtectedRoute>
+        <LandingPage />
+      </ProtectedRoute>
     ),
   },
   {

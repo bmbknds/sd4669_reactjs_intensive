@@ -11,6 +11,7 @@ export interface User {
   name: string;
   role: UserRole;
   avatar?: string;
+  personalInfo?: PersonalInfo;
 }
 
 // Auth types
@@ -28,15 +29,54 @@ export interface AuthResponse {
 export interface PersonalInfo {
   id: string;
   userId: string;
-  fullName: string;
+  firstName: string;
+  middleName?: string;
+  lastName: string;
   dateOfBirth: string;
-  phoneNumber: string;
-  address: string;
-  city: string;
-  country: string;
-  zipCode: string;
+  age: number;
+  emails: EmailInfo[];
+  phones: PhoneInfo[];
+  addresses: AddressInfo[];
+  identificationDocuments: IdentificationDocument;
+  occupations: OccupationInfo[];
   createdAt: string;
   updatedAt: string;
+}
+
+export interface EmailInfo {
+  id: string;
+  email: string;
+  type: 'Work' | 'Personal';
+  preferred: boolean;
+}
+
+export interface PhoneInfo {
+  id: string;
+  number: string;
+  type: 'Work' | 'Personal';
+  preferred: boolean;
+}
+
+export interface AddressInfo {
+  id: string;
+  country: string;
+  city: string;
+  street: string;
+  postalCode?: string;
+  type: 'Mailing' | 'Work';
+}
+
+export interface IdentificationDocument {
+  passport?: string; // File URL
+  nationalId?: string; // File URL
+  driverLicense?: string; // File URL
+}
+
+export interface OccupationInfo {
+  id: string;
+  name: string;
+  fromYear: number;
+  toYear?: number;
 }
 
 // KYC types
