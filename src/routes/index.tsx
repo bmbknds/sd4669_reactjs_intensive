@@ -11,6 +11,7 @@ const ProfilePage = lazy(() => import('../features/profile/profile-page'));
 const KYCPage = lazy(() => import('../features/kyc/kyc-page'));
 const ClientListPage = lazy(() => import('../features/client-list/client-list-page'));
 const ReviewPage = lazy(() => import('../features/review/review-page'));
+const ResultsPage = lazy(() => import('../features/review/results-page'));
 
 export const router = createBrowserRouter([
   {
@@ -78,6 +79,14 @@ export const router = createBrowserRouter([
     element: (
       <ProtectedRoute requiredRole={UserRole.OFFICER}>
         <ReviewPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/results',
+    element: (
+      <ProtectedRoute requiredRole={UserRole.OFFICER}>
+        <ResultsPage />
       </ProtectedRoute>
     ),
   },

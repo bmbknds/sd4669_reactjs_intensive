@@ -8,6 +8,8 @@ const apiClient: AxiosInstance = axios.create({
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
+    'Cache-Control': 'no-cache',
+    Pragma: 'no-cache',
   },
 });
 
@@ -21,6 +23,9 @@ apiClient.interceptors.request.use(
         config.headers.Authorization = `Bearer ${state.token}`;
       }
     }
+    // Add cache-busting header per request
+    config.headers['Cache-Control'] = 'no-cache';
+    config.headers['Pragma'] = 'no-cache';
     return config;
   },
   (error: AxiosError) => {
@@ -28,14 +33,25 @@ apiClient.interceptors.request.use(
   }
 );
 
-// Response interceptor - Handle errors
+// Response interceptor - Handle errors with simple retry
 apiClient.interceptors.response.use(
   (response) => response,
-  (error: AxiosError) => {
+  async (error: AxiosError) => {
+    const config: any = error.config;
     if (error.response?.status === 401) {
-      // Clear auth and redirect to login
       localStorage.removeItem('auth-storage');
       globalThis.location.href = '/login';
+    }
+    // retry up to 2 times on network/5xx errors
+    const shouldRetry = !error.response || (error.response.status >= 500 && error.response.status < 600);
+    if (shouldRetry && !config.__retryCount) {
+      config.__retryCount = 1;
+      await new Promise((r) => setTimeout(r, 300));
+      return apiClient(config);
+    } else if (shouldRetry && config.__retryCount === 1) {
+      config.__retryCount = 2;
+      await new Promise((r) => setTimeout(r, 600));
+      return apiClient(config);
     }
     return Promise.reject(error);
   }

@@ -50,11 +50,11 @@ const LoginPage = () => {
       
       message.success('Login successful!');
       
-      // Navigate based on user role
+      // Navigate based on user role per assignment
       if (response.user.role === UserRole.OFFICER) {
-        navigate('/landing');
+        navigate('/clients');
       } else {
-        navigate('/landing');
+        navigate('/profile');
       }
     } catch (error: any) {
       message.error(error.response?.data?.message || 'Login failed. Please check your credentials.');
